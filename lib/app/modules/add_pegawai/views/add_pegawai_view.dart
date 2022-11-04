@@ -14,37 +14,40 @@ class AddPegawaiView extends GetView<AddPegawaiController> {
         centerTitle: true,
       ),
       body: ListView(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         children: [
           TextField(
+            autocorrect: false,
             controller: controller.nipC,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: "NIP",
               border: OutlineInputBorder(),
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           TextField(
+            autocorrect: false,
             controller: controller.nameC,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: "Name",
               border: OutlineInputBorder(),
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           TextField(
+            autocorrect: false,
             controller: controller.emailC,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: "Email",
               border: OutlineInputBorder(),
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
               controller.addPegawai();
             },
-            child: Text("ADD PEGAWAI"),
+            child: const Text("ADD PEGAWAI"),
           ),
         ],
       ),
