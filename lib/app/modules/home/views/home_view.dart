@@ -14,10 +14,18 @@ class HomeView extends GetView<HomeController> {
         title: const Text('HomeView'),
         centerTitle: true,
         actions: [
-          IconButton(
-            onPressed: () => Get.toNamed(Routes.ADD_PEGAWAI),
-            icon: const Icon(Icons.admin_panel_settings),
-          )
+          Obx(
+            () => IconButton(
+              onPressed: () async {
+                if (controller.isLoading.isFalse) {
+                  await controller.signOut();
+                }
+              },
+              icon: controller.isLoading.isFalse
+                  ? const Icon(Icons.logout)
+                  : const CircularProgressIndicator(),
+            ),
+          ),
         ],
       ),
       body: const Center(
@@ -25,6 +33,10 @@ class HomeView extends GetView<HomeController> {
           'HomeView is working',
           style: TextStyle(fontSize: 20),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Get.toNamed(Routes.ADD_PEGAWAI),
+        child: const Icon(Icons.admin_panel_settings),
       ),
     );
   }
