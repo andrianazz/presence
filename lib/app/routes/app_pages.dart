@@ -10,6 +10,10 @@ import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/new_password/bindings/new_password_binding.dart';
 import '../modules/new_password/views/new_password_view.dart';
+import '../modules/profile/bindings/profile_binding.dart';
+import '../modules/profile/views/profile_view.dart';
+import '../modules/update_profile/bindings/update_profile_binding.dart';
+import '../modules/update_profile/views/update_profile_view.dart';
 
 part 'app_routes.dart';
 
@@ -38,11 +42,28 @@ class AppPages {
       name: _Paths.NEW_PASSWORD,
       page: () => const NewPasswordView(),
       binding: NewPasswordBinding(),
+      children: [
+        GetPage(
+          name: _Paths.NEW_PASSWORD,
+          page: () => const NewPasswordView(),
+          binding: NewPasswordBinding(),
+        ),
+      ],
     ),
     GetPage(
       name: _Paths.FORGET_PASSWORD,
       page: () => const ForgetPasswordView(),
       binding: ForgetPasswordBinding(),
+    ),
+    GetPage(
+      name: _Paths.PROFILE,
+      page: () => const ProfileView(),
+      binding: ProfileBinding(),
+    ),
+    GetPage(
+      name: _Paths.UPDATE_PROFILE,
+      page: () => UpdateProfileView(),
+      binding: UpdateProfileBinding(),
     ),
   ];
 }

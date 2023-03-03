@@ -15,6 +15,10 @@ class HomeView extends GetView<HomeController> {
         title: const Text('HomeView'),
         centerTitle: true,
         actions: [
+          IconButton(
+            onPressed: () => Get.toNamed(Routes.PROFILE),
+            icon: const Icon(Icons.person),
+          ),
           Obx(
             () => IconButton(
               onPressed: () async {

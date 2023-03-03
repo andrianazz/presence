@@ -70,7 +70,7 @@ class AddPegawaiController extends GetxController {
       try {
         String oldEmail = auth.currentUser!.email!;
 
-        final credentialAdmin = await auth.signInWithEmailAndPassword(
+        await auth.signInWithEmailAndPassword(
             email: oldEmail, password: passAdminC.text);
 
         final credentialPegawai = await auth.createUserWithEmailAndPassword(
