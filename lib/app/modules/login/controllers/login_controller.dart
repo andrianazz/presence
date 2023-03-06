@@ -22,7 +22,7 @@ class LoginController extends GetxController {
         if (credentialPegawai.user != null) {
           if (credentialPegawai.user!.emailVerified == true) {
             isLoading.value = false;
-            if (passAdminC.text == "password") {
+            if (passC.text == "password") {
               Get.toNamed(Routes.NEW_PASSWORD);
             } else {
               Get.offAllNamed(Routes.HOME);
