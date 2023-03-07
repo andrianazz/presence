@@ -69,7 +69,13 @@ class HomeView extends GetView<HomeController> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const Text("Jl. Nelayan"),
+                          SizedBox(
+                            width: 250,
+                            child: Text(
+                              user['address'] ?? 'Tidak ada data',
+                              textAlign: TextAlign.left,
+                            ),
+                          ),
                         ],
                       )
                     ],
@@ -154,7 +160,7 @@ class HomeView extends GetView<HomeController> {
                     children: [
                       const Text("Last 5 days"),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () => Get.toNamed(Routes.ALL_PRESENSI),
                         child: const Text("Show More"),
                       )
                     ],
@@ -163,28 +169,40 @@ class HomeView extends GetView<HomeController> {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: 5,
-                    itemBuilder: (context, index) => Container(
-                      margin: const EdgeInsets.only(bottom: 20),
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
+                    itemBuilder: (context, index) => Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Material(
                         color: Colors.grey[300],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text("Masuk"),
-                              Text(DateFormat.yMMMEd().format(DateTime.now()))
-                            ],
+                        borderRadius: BorderRadius.circular(20),
+                        child: InkWell(
+                          onTap: () {
+                            Get.toNamed(Routes.DETAIL_PRESENSI);
+                          },
+                          borderRadius: BorderRadius.circular(20),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text("Masuk"),
+                                    Text(DateFormat.yMMMEd()
+                                        .format(DateTime.now()))
+                                  ],
+                                ),
+                                Text(DateFormat.jms().format(DateTime.now())),
+                                const SizedBox(height: 10),
+                                const Text("Keluar"),
+                                Text(DateFormat.jms().format(DateTime.now()))
+                              ],
+                            ),
                           ),
-                          Text(DateFormat.jms().format(DateTime.now())),
-                          const SizedBox(height: 10),
-                          const Text("Keluar"),
-                          Text(DateFormat.jms().format(DateTime.now()))
-                        ],
+                        ),
                       ),
                     ),
                   ),
