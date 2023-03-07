@@ -80,8 +80,46 @@ class PageIndexController extends GetxController {
           }
         },
       );
+
+      Get.snackbar("Berhasil", "Berhasil melakukan absen masuk");
     } else {
       //Eksekusi Keluar
+      DocumentSnapshot<Map<String, dynamic>> todayDocs =
+          await presenceRef.doc(now).get();
+
+      if (todayDocs.exists) {
+        if (todayDocs['kelaur'] == null) {
+          await presenceRef.doc(now).update(
+            {
+              'keluar': {
+                'date': DateTime.now().toIso8601String(),
+                'latitude': "${position.latitude}",
+                'longitude': "${position.longitude}",
+                'address': address,
+                'status': "Di dalam Area",
+              }
+            },
+          );
+
+          Get.snackbar("Berhasil", "Berhasil melakukan absen keluar");
+        } else {
+          Get.snackbar("Gagal", "Anda sudah melakukan absen hari ini");
+        }
+      } else {
+        await presenceRef.doc(now).update(
+          {
+            'keluar': {
+              'date': DateTime.now().toIso8601String(),
+              'latitude': "${position.latitude}",
+              'longitude': "${position.longitude}",
+              'address': address,
+              'status': "Di dalam Area",
+            }
+          },
+        );
+
+        Get.snackbar("Berhasil", "Berhasil melakukan absen keluar");
+      }
     }
   }
 
