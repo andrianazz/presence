@@ -43,6 +43,15 @@ class AddPegawaiView extends GetView<AddPegawaiController> {
             ),
           ),
           const SizedBox(height: 20),
+          TextField(
+            autocorrect: false,
+            controller: controller.jobC,
+            decoration: const InputDecoration(
+              labelText: 'Job',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 20),
           Obx(
             () => ElevatedButton(
               onPressed: () async {

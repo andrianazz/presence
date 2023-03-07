@@ -10,6 +10,7 @@ class AddPegawaiController extends GetxController {
   TextEditingController nipC = TextEditingController();
   TextEditingController emailC = TextEditingController();
   TextEditingController passAdminC = TextEditingController();
+  TextEditingController jobC = TextEditingController();
 
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -17,7 +18,8 @@ class AddPegawaiController extends GetxController {
   Future<void> addPegawai() async {
     if (nameC.text.isNotEmpty &&
         nipC.text.isNotEmpty &&
-        emailC.text.isNotEmpty) {
+        emailC.text.isNotEmpty &&
+        jobC.text.isNotEmpty) {
       Get.defaultDialog(
         title: 'Validasi Admin',
         content: Column(
@@ -59,8 +61,8 @@ class AddPegawaiController extends GetxController {
       );
     } else {
       isLoading.value = false;
-      Get.snackbar(
-          "Terjadi Kesalahan", "Nama , NIP, dan Email tak boleh kosong");
+      Get.snackbar("Terjadi Kesalahan",
+          "Nama , NIP, dan Email dan Job tak boleh kosong");
     }
   }
 
@@ -85,6 +87,7 @@ class AddPegawaiController extends GetxController {
             'email': emailC.text,
             'nip': nipC.text,
             'role': "pegawai",
+            "job": jobC.text,
             'createdAt': DateTime.now().toIso8601String(),
           });
 
