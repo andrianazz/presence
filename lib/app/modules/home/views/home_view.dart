@@ -116,37 +116,58 @@ class HomeView extends GetView<HomeController> {
                   Container(
                     padding: const EdgeInsets.all(20),
                     color: Colors.grey[300],
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Column(
-                          children: const [
-                            Text(
-                              "Masuk",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
+                    child:
+                        StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                      stream: controller.streamPresenceToday(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        }
+
+                        var dataPresence = snapshot.data?.data();
+                        String masukPresence = dataPresence?['masuk'] != null
+                            ? DateFormat.jms()
+                                .format(dataPresence!['masuk']['date'])
+                            : "-";
+                        String keluarPresence = dataPresence?['keluar'] != null
+                            ? DateFormat.jms()
+                                .format(dataPresence!['keluar']['date'])
+                            : "-";
+
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Column(
+                              children: [
+                                const Text(
+                                  "Masuk",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(masukPresence),
+                              ],
                             ),
-                            Text("-"),
-                          ],
-                        ),
-                        Container(
-                          width: 2,
-                          height: 20,
-                          color: Colors.black26,
-                        ),
-                        Column(
-                          children: const [
-                            Text(
-                              "Keluar",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
+                            Container(
+                              width: 2,
+                              height: 20,
+                              color: Colors.black26,
                             ),
-                            Text("-"),
+                            Column(
+                              children: [
+                                const Text(
+                                  "Keluar",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(keluarPresence),
+                              ],
+                            ),
                           ],
-                        ),
-                      ],
+                        );
+                      },
                     ),
                   ),
                   const SizedBox(height: 10),
