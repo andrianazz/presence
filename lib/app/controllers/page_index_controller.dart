@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -30,7 +31,6 @@ class PageIndexController extends GetxController {
               "${placemarks[0].street}, ${placemarks[0].subLocality}, ${placemarks[0].locality}";
           await updatePosition(position, address);
           await presence(position, address);
-          Get.snackbar("Berhasil", "${dataResponse['message']} pada $address");
         }
 
         break;
@@ -77,17 +77,35 @@ class PageIndexController extends GetxController {
 
     if (snapshot.docs.isEmpty) {
       //Eksekusi Masuk
-      await presenceRef.doc(now).set(
-        {
-          'date': DateTime.now().toIso8601String(),
-          'masuk': {
-            'date': DateTime.now().toIso8601String(),
-            'latitude': "${position.latitude}",
-            'longitude': "${position.longitude}",
-            'address': address,
-            'status': status,
-          }
-        },
+      await Get.defaultDialog(
+        title: "Validasi Absen",
+        middleText: "APAKAH ANDA YAKIN INGIN MELAKUKAN ABSEN MASUK HARI INI?",
+        actions: [
+          OutlinedButton(
+            onPressed: () => Get.back(),
+            child: const Text("CANCEL"),
+          ),
+          ElevatedButton(
+              onPressed: () async {
+                await presenceRef.doc(now).set(
+                  {
+                    'date': DateTime.now().toIso8601String(),
+                    'masuk': {
+                      'date': DateTime.now().toIso8601String(),
+                      'latitude': "${position.latitude}",
+                      'longitude': "${position.longitude}",
+                      'address': address,
+                      'status': status,
+                    }
+                  },
+                );
+
+                Get.back();
+
+                Get.snackbar("Berhasil", "ANDA BERHASIL MELAKUKAN ABSEN MASUK");
+              },
+              child: const Text("ABSEN")),
+        ],
       );
     } else {
       //Eksekusi Keluar
@@ -95,32 +113,71 @@ class PageIndexController extends GetxController {
           await presenceRef.doc(now).get();
 
       if (todayDocs.exists) {
-        if (todayDocs['kelaur'] == null) {
-          await presenceRef.doc(now).update(
-            {
-              'keluar': {
-                'date': DateTime.now().toIso8601String(),
-                'latitude': "${position.latitude}",
-                'longitude': "${position.longitude}",
-                'address': address,
-                'status': status,
-              }
-            },
+        if (todayDocs['keluar'] == null) {
+          await Get.defaultDialog(
+            title: "Validasi Absen",
+            middleText:
+                "APAKAH ANDA YAKIN INGIN MELAKUKAN ABSEN KELUAR HARI INI?",
+            actions: [
+              OutlinedButton(
+                onPressed: () => Get.back(),
+                child: const Text("CANCEL"),
+              ),
+              ElevatedButton(
+                  onPressed: () async {
+                    await presenceRef.doc(now).update(
+                      {
+                        'keluar': {
+                          'date': DateTime.now().toIso8601String(),
+                          'latitude': "${position.latitude}",
+                          'longitude': "${position.longitude}",
+                          'address': address,
+                          'status': status,
+                        }
+                      },
+                    );
+
+                    Get.back();
+
+                    Get.snackbar(
+                        "Berhasil", "ANDA BERHASIL MELAKUKAN ABSEN KELUAR");
+                  },
+                  child: const Text("ABSEN")),
+            ],
           );
         } else {
-          Get.snackbar("Gagal", "Anda sudah melakukan absen hari ini");
+          Get.snackbar("INFORMASI", "Anda sudah melakukan absen hari ini");
         }
       } else {
-        await presenceRef.doc(now).update(
-          {
-            'keluar': {
-              'date': DateTime.now().toIso8601String(),
-              'latitude': "${position.latitude}",
-              'longitude': "${position.longitude}",
-              'address': address,
-              'status': status,
-            }
-          },
+        await Get.defaultDialog(
+          title: "Validasi Absen",
+          middleText: "APAKAH ANDA YAKIN INGIN MELAKUKAN ABSEN MASUK HARI INI?",
+          actions: [
+            OutlinedButton(
+              onPressed: () => Get.back(),
+              child: const Text("CANCEL"),
+            ),
+            ElevatedButton(
+                onPressed: () async {
+                  await presenceRef.doc(now).update(
+                    {
+                      'masuk': {
+                        'date': DateTime.now().toIso8601String(),
+                        'latitude': "${position.latitude}",
+                        'longitude': "${position.longitude}",
+                        'address': address,
+                        'status': status,
+                      }
+                    },
+                  );
+
+                  Get.back();
+
+                  Get.snackbar(
+                      "Berhasil", "ANDA BERHASIL MELAKUKAN ABSEN MASUK");
+                },
+                child: const Text("ABSEN")),
+          ],
         );
       }
     }
