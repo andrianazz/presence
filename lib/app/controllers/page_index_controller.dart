@@ -66,6 +66,15 @@ class PageIndexController extends GetxController {
 
     QuerySnapshot<Map<String, dynamic>> snapshot = await presenceRef.get();
 
+    double distanceInMeters = Geolocator.distanceBetween(position.latitude,
+        position.longitude, 0.5477153324473172, 101.42622971181308);
+
+    String status = "Di Luar Area";
+
+    if (distanceInMeters <= 200) {
+      status = "Di dalam Area";
+    }
+
     if (snapshot.docs.isEmpty) {
       //Eksekusi Masuk
       await presenceRef.doc(now).set(
@@ -76,12 +85,10 @@ class PageIndexController extends GetxController {
             'latitude': "${position.latitude}",
             'longitude': "${position.longitude}",
             'address': address,
-            'status': "Di dalam Area",
+            'status': status,
           }
         },
       );
-
-      Get.snackbar("Berhasil", "Berhasil melakukan absen masuk");
     } else {
       //Eksekusi Keluar
       DocumentSnapshot<Map<String, dynamic>> todayDocs =
@@ -96,12 +103,10 @@ class PageIndexController extends GetxController {
                 'latitude': "${position.latitude}",
                 'longitude': "${position.longitude}",
                 'address': address,
-                'status': "Di dalam Area",
+                'status': status,
               }
             },
           );
-
-          Get.snackbar("Berhasil", "Berhasil melakukan absen keluar");
         } else {
           Get.snackbar("Gagal", "Anda sudah melakukan absen hari ini");
         }
@@ -113,12 +118,10 @@ class PageIndexController extends GetxController {
               'latitude': "${position.latitude}",
               'longitude': "${position.longitude}",
               'address': address,
-              'status': "Di dalam Area",
+              'status': status,
             }
           },
         );
-
-        Get.snackbar("Berhasil", "Berhasil melakukan absen keluar");
       }
     }
   }

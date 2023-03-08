@@ -165,46 +165,77 @@ class HomeView extends GetView<HomeController> {
                       )
                     ],
                   ),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: 5,
-                    itemBuilder: (context, index) => Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Material(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(20),
-                        child: InkWell(
-                          onTap: () {
-                            Get.toNamed(Routes.DETAIL_PRESENSI);
-                          },
-                          borderRadius: BorderRadius.circular(20),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text("Masuk"),
-                                    Text(DateFormat.yMMMEd()
-                                        .format(DateTime.now()))
-                                  ],
-                                ),
-                                Text(DateFormat.jms().format(DateTime.now())),
-                                const SizedBox(height: 10),
-                                const Text("Keluar"),
-                                Text(DateFormat.jms().format(DateTime.now()))
-                              ],
-                            ),
+                  StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                    stream: controller.streamPresence(),
+                    builder: (context, snapshotPresence) {
+                      if (snapshotPresence.connectionState ==
+                          ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      }
+
+                      if (!snapshotPresence.hasData) {
+                        return const SizedBox(
+                          height: 150,
+                          child: Center(
+                            child: Text("Tidak ada data"),
                           ),
-                        ),
-                      ),
-                    ),
+                        );
+                      }
+
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: snapshotPresence.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          Map<String, dynamic> data =
+                              snapshotPresence.data!.docs[index].data();
+
+                          return Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Material(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(20),
+                              child: InkWell(
+                                onTap: () {
+                                  Get.toNamed(Routes.DETAIL_PRESENSI);
+                                },
+                                borderRadius: BorderRadius.circular(20),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          const Text("Masuk"),
+                                          Text(DateFormat.yMMMEd()
+                                              .format(data['date']))
+                                        ],
+                                      ),
+                                      Text(DateFormat.jms()
+                                          .format(data['masuk']['date'])),
+                                      const SizedBox(height: 10),
+                                      const Text("Keluar"),
+                                      Text(
+                                        data['keluar']['date'] == null
+                                            ? "-"
+                                            : DateFormat.jms()
+                                                .format(data['keluar']['date']),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
                   ),
                 ],
               );
