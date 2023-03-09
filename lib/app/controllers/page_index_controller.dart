@@ -94,6 +94,7 @@ class PageIndexController extends GetxController {
                       'date': DateTime.now().toIso8601String(),
                       'latitude': "${position.latitude}",
                       'longitude': "${position.longitude}",
+                      'distance': distanceInMeters,
                       'address': address,
                       'status': status,
                     }
@@ -131,6 +132,7 @@ class PageIndexController extends GetxController {
                           'date': DateTime.now().toIso8601String(),
                           'latitude': "${position.latitude}",
                           'longitude': "${position.longitude}",
+                          'distance': distanceInMeters,
                           'address': address,
                           'status': status,
                         }
@@ -165,6 +167,7 @@ class PageIndexController extends GetxController {
                         'date': DateTime.now().toIso8601String(),
                         'latitude': "${position.latitude}",
                         'longitude': "${position.longitude}",
+                        'distance': distanceInMeters,
                         'address': address,
                         'status': status,
                       }

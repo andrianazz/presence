@@ -9,6 +9,8 @@ class DetailPresensiView extends GetView<DetailPresensiController> {
   const DetailPresensiView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final Map<String, dynamic> data = Get.arguments;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('DETAIL PRESENSI'),
@@ -28,12 +30,52 @@ class DetailPresensiView extends GetView<DetailPresensiController> {
                       fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const Text("Masuk"),
-                const Text("19.17287981273, -12898321"),
-                Text(DateFormat.jms().format(DateTime.now())),
+                Text(
+                  "lat and long : ${data['masuk']['lat']}, ${data['masuk']['long']}",
+                ),
+                Text(
+                  DateFormat.jms().format(
+                    DateTime.parse(
+                      data['masuk']['date'],
+                    ),
+                  ),
+                ),
+                Text("address : ${data['masuk']['address']}"),
+                Text(
+                    "distance : ${data['masuk']['distance'].toString().split(".").first}"),
+                Text("status : ${data['masuk']['status']}"),
                 const SizedBox(height: 10),
                 const Text("Keluar"),
-                const Text("1.376872, -2783.387"),
-                Text(DateFormat.jms().format(DateTime.now())),
+                Text(
+                  data["keluar"]["lat"] != null ||
+                          data["keluar"]["long"] != null
+                      ? "lat and long : ${data['keluar']['lat']}, ${data['keluar']['long']}"
+                      : "lat and long : - ",
+                ),
+                Text(
+                  data['keluar']['date'] != null
+                      ? DateFormat.jms().format(
+                          DateTime.parse(
+                            data['keluar']['date'],
+                          ),
+                        )
+                      : "-",
+                ),
+                Text(
+                  data['keluar']['address'] != null
+                      ? "address : ${data['keluar']['address']}"
+                      : "address : -",
+                ),
+                Text(
+                  data['keluar']['distance']
+                      ? "distance : ${data['keluar']['distance'].toString().split(".").first}"
+                      : "distance : -",
+                ),
+                Text(
+                  data['keluar']['status'] != null
+                      ? "status : ${data['keluar']['status']}"
+                      : "status : -",
+                ),
               ],
             ),
           )
