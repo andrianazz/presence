@@ -28,7 +28,7 @@ class PageIndexController extends GetxController {
               position.latitude, position.longitude);
 
           String address =
-              "${placemarks[0].street}, ${placemarks[0].subLocality}, ${placemarks[0].locality}";
+              "${placemarks[0].name}, ${placemarks[0].subLocality}, ${placemarks[0].locality}";
           await updatePosition(position, address);
           await presence(position, address);
         }
@@ -114,7 +114,7 @@ class PageIndexController extends GetxController {
           await presenceRef.doc(now).get();
 
       if (todayDocs.exists) {
-        if (todayDocs['keluar'] == null) {
+        if (todayDocs.data()!['keluar'] == null) {
           await Get.defaultDialog(
             title: "Validasi Absen",
             middleText:

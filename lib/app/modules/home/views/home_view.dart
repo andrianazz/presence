@@ -29,7 +29,7 @@ class HomeView extends GetView<HomeController> {
           ),
         ],
       ),
-      body: StreamBuilder<Object>(
+      body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
         stream: controller.streamUser(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -37,9 +37,10 @@ class HomeView extends GetView<HomeController> {
           }
 
           if (snapshot.hasData) {
-            Map<String, dynamic> user = snapshot.data as Map<String, dynamic>;
+            Map<String, dynamic> user =
+                snapshot.data!.data() as Map<String, dynamic>;
             String defaultImage =
-                "https://ui-avatars.com/api/?name=${user['nama']}";
+                "https://ui-avatars.com/api/?name=${user['nama'].toString().split(' ').join('+')}";
 
             return ListView(
               padding: const EdgeInsets.all(20),
@@ -53,9 +54,7 @@ class HomeView extends GetView<HomeController> {
                         height: 70,
                         color: Colors.grey[300],
                         child: Center(
-                          child: Text(user['profile'] == null
-                              ? user['profile']
-                              : defaultImage),
+                          child: Image.network(user['profile'] ?? defaultImage),
                         ),
                       ),
                     ),
@@ -63,21 +62,24 @@ class HomeView extends GetView<HomeController> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "Welcome, ${user['nama']}",
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
+                        SizedBox(
+                          width: 100,
+                          child: Text(
+                            "Welcome, ${user['nama']}",
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                         SizedBox(
-                          width: 250,
+                          width: 200,
                           child: Text(
                             user['address'] ?? 'Tidak ada data',
                             textAlign: TextAlign.left,
                           ),
                         ),
                       ],
-                    )
+                    ),
                   ],
                 ),
                 const SizedBox(
@@ -125,12 +127,12 @@ class HomeView extends GetView<HomeController> {
 
                       var dataPresence = snapshot.data?.data();
                       String masukPresence = dataPresence?['masuk'] != null
-                          ? DateFormat.jms()
-                              .format(dataPresence!['masuk']['date'])
+                          ? DateFormat.jms().format(
+                              DateTime.parse(dataPresence!['masuk']['date']))
                           : "-";
                       String keluarPresence = dataPresence?['keluar'] != null
-                          ? DateFormat.jms()
-                              .format(dataPresence!['keluar']['date'])
+                          ? DateFormat.jms().format(
+                              DateTime.parse(dataPresence!['keluar']['date']))
                           : "-";
 
                       return Row(
@@ -209,54 +211,54 @@ class HomeView extends GetView<HomeController> {
                         Map<String, dynamic> data =
                             snapshotPresence.data!.docs[index].data();
 
-                        return Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: Material(
-                            color: Colors.grey[300],
+                        return Material(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(20),
+                          child: InkWell(
+                            onTap: () {
+                              Get.toNamed(
+                                Routes.DETAIL_PRESENSI,
+                                arguments: data,
+                              );
+                            },
                             borderRadius: BorderRadius.circular(20),
-                            child: InkWell(
-                              onTap: () {
-                                Get.toNamed(
-                                  Routes.DETAIL_PRESENSI,
-                                  arguments: data,
-                                );
-                              },
-                              borderRadius: BorderRadius.circular(20),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        const Text("Masuk"),
-                                        Text(
-                                          DateFormat.yMMMEd().format(
-                                            data['date'],
-                                          ),
+                            child: Container(
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text("Masuk"),
+                                      Text(
+                                        DateFormat.yMMMEd().format(
+                                          DateTime.parse(data['date']),
                                         ),
-                                      ],
-                                    ),
-                                    Text(
-                                      DateFormat.jms().format(
-                                        data['masuk']['date'],
                                       ),
+                                    ],
+                                  ),
+                                  Text(
+                                    DateFormat.jms().format(
+                                      DateTime.parse(data['masuk']['date']),
                                     ),
-                                    const SizedBox(height: 10),
-                                    const Text("Keluar"),
-                                    Text(
-                                      data['keluar']['date'] == null
-                                          ? "-"
-                                          : DateFormat.jms().format(
+                                  ),
+                                  const SizedBox(height: 10),
+                                  const Text("Keluar"),
+                                  Text(
+                                    data['keluar'] == null
+                                        ? "-"
+                                        : DateFormat.jms().format(
+                                            DateTime.parse(
                                               data['keluar']['date'],
                                             ),
-                                    ),
-                                  ],
-                                ),
+                                          ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),

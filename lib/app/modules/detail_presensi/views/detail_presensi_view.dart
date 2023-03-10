@@ -20,7 +20,11 @@ class DetailPresensiView extends GetView<DetailPresensiController> {
         padding: const EdgeInsets.all(20),
         children: [
           Container(
-            color: Colors.grey[200],
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(20),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -29,9 +33,16 @@ class DetailPresensiView extends GetView<DetailPresensiController> {
                   style: const TextStyle(
                       fontSize: 16, fontWeight: FontWeight.bold),
                 ),
-                const Text("Masuk"),
+                const SizedBox(height: 20),
+                const Text(
+                  "Masuk",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 Text(
-                  "lat and long : ${data['masuk']['lat']}, ${data['masuk']['long']}",
+                  "lat and long : ${data['masuk']['latitude']}, ${data['masuk']['longitude']}",
                 ),
                 Text(
                   DateFormat.jms().format(
@@ -45,15 +56,20 @@ class DetailPresensiView extends GetView<DetailPresensiController> {
                     "distance : ${data['masuk']['distance'].toString().split(".").first}"),
                 Text("status : ${data['masuk']['status']}"),
                 const SizedBox(height: 10),
-                const Text("Keluar"),
+                const Text(
+                  "Keluar",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 Text(
-                  data["keluar"]["lat"] != null ||
-                          data["keluar"]["long"] != null
-                      ? "lat and long : ${data['keluar']['lat']}, ${data['keluar']['long']}"
+                  data["keluar"] != null || data["keluar"] != null
+                      ? "lat and long : ${data['keluar']['latitude']}, ${data['keluar']['longitude']}"
                       : "lat and long : - ",
                 ),
                 Text(
-                  data['keluar']['date'] != null
+                  data['keluar'] != null
                       ? DateFormat.jms().format(
                           DateTime.parse(
                             data['keluar']['date'],
@@ -62,17 +78,17 @@ class DetailPresensiView extends GetView<DetailPresensiController> {
                       : "-",
                 ),
                 Text(
-                  data['keluar']['address'] != null
+                  data['keluar'] != null
                       ? "address : ${data['keluar']['address']}"
                       : "address : -",
                 ),
                 Text(
-                  data['keluar']['distance']
+                  data['keluar'] != null
                       ? "distance : ${data['keluar']['distance'].toString().split(".").first}"
                       : "distance : -",
                 ),
                 Text(
-                  data['keluar']['status'] != null
+                  data['keluar'] != null
                       ? "status : ${data['keluar']['status']}"
                       : "status : -",
                 ),
